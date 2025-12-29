@@ -21,6 +21,25 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
     hingeB: THREE.Mesh;
   } | null>(null);
 
+  // Orbit controls state
+  const isDragging = useRef(false);
+  const previousMousePosition = useRef({ x: 0, y: 0 });
+  const cameraDistance = useRef(6);
+  const cameraAngleX = useRef(0);
+  const cameraAngleY = useRef(0.5);
+
+  const updateCameraPosition = useCallback(() => {
+    if (!sceneRef.current) return;
+    const { camera } = sceneRef.current;
+    
+    const x = cameraDistance.current * Math.sin(cameraAngleX.current) * Math.cos(cameraAngleY.current);
+    const y = cameraDistance.current * Math.sin(cameraAngleY.current) + 1.5;
+    const z = cameraDistance.current * Math.cos(cameraAngleX.current) * Math.cos(cameraAngleY.current);
+    
+    camera.position.set(x, y, z);
+    camera.lookAt(0, 1.2, 0);
+  }, []);
+
   const initScene = useCallback(() => {
     if (!containerRef.current) return;
 
@@ -113,7 +132,7 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
 
     // Sliding mass track
     const trackGeometry = new THREE.BoxGeometry(params.finalRadius - params.initialRadius + 0.1, 0.02, 0.06);
-    const trackMaterial = new THREE.MeshStandardMaterial({ color: 0x334455 });
+    const trackMaterial = new THREE.MeshStandardMaterial({ color: 0x778899 });
     const track = new THREE.Mesh(trackGeometry, trackMaterial);
     track.position.set(
       (params.initialRadius + params.finalRadius) / 2,
@@ -215,6 +234,35 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
     };
     animate();
 
+    // Mouse controls for orbit
+    const handleMouseDown = (e: MouseEvent) => {
+      isDragging.current = true;
+      previousMousePosition.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current) return;
+      
+      const deltaX = e.clientX - previousMousePosition.current.x;
+      const deltaY = e.clientY - previousMousePosition.current.y;
+      
+      cameraAngleX.current += deltaX * 0.01;
+      cameraAngleY.current = Math.max(0.1, Math.min(1.4, cameraAngleY.current + deltaY * 0.01));
+      
+      updateCameraPosition();
+      previousMousePosition.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleMouseUp = () => {
+      isDragging.current = false;
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      cameraDistance.current = Math.max(3, Math.min(15, cameraDistance.current + e.deltaY * 0.01));
+      updateCameraPosition();
+    };
+
     // Handle resize
     const handleResize = () => {
       if (!containerRef.current) return;
@@ -225,14 +273,25 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
       renderer.setSize(newWidth, newHeight);
     };
 
+    const element = renderer.domElement;
+    element.addEventListener('mousedown', handleMouseDown);
+    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('mouseup', handleMouseUp);
+    element.addEventListener('mouseleave', handleMouseUp);
+    element.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('resize', handleResize);
 
     return () => {
+      element.removeEventListener('mousedown', handleMouseDown);
+      element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('mouseup', handleMouseUp);
+      element.removeEventListener('mouseleave', handleMouseUp);
+      element.removeEventListener('wheel', handleWheel);
       window.removeEventListener('resize', handleResize);
       renderer.dispose();
       containerRef.current?.removeChild(renderer.domElement);
     };
-  }, [params.doorWidth, params.initialRadius, params.finalRadius]);
+  }, [params.doorWidth, params.initialRadius, params.finalRadius, updateCameraPosition]);
 
   useEffect(() => {
     const cleanup = initScene();
@@ -262,7 +321,7 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
   return (
     <div 
       ref={containerRef} 
-      className="w-full h-full bg-simulationBg rounded-lg overflow-hidden"
+      className="w-full h-full bg-simulationBg rounded-lg overflow-hidden cursor-grab active:cursor-grabbing"
       style={{ minHeight: '400px' }}
     />
   );
