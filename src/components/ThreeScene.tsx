@@ -29,7 +29,7 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
 
     // Scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0d1117);
+    scene.background = new THREE.Color(0xf0f4f8);
 
     // Camera
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
@@ -45,54 +45,54 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
     containerRef.current.appendChild(renderer.domElement);
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0x404050, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(5, 10, 5);
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
     scene.add(directionalLight);
 
-    const fillLight = new THREE.DirectionalLight(0x4080ff, 0.3);
+    const fillLight = new THREE.DirectionalLight(0x88aaff, 0.4);
     fillLight.position.set(-5, 5, -5);
     scene.add(fillLight);
 
     // Grid
-    const gridHelper = new THREE.GridHelper(10, 20, 0x1a2332, 0x1a2332);
+    const gridHelper = new THREE.GridHelper(10, 20, 0xc8d4e0, 0xdce4ec);
     gridHelper.position.y = 0;
     scene.add(gridHelper);
 
     // Materials
     const doorMaterialA = new THREE.MeshStandardMaterial({
-      color: 0x00b8d4,
-      metalness: 0.3,
-      roughness: 0.4,
-      emissive: 0x003344,
-      emissiveIntensity: 0.2,
+      color: 0x0088cc,
+      metalness: 0.2,
+      roughness: 0.5,
+      emissive: 0x004466,
+      emissiveIntensity: 0.1,
     });
 
     const doorMaterialB = new THREE.MeshStandardMaterial({
       color: 0xf5a623,
-      metalness: 0.3,
-      roughness: 0.4,
-      emissive: 0x442200,
-      emissiveIntensity: 0.2,
+      metalness: 0.2,
+      roughness: 0.5,
+      emissive: 0x663300,
+      emissiveIntensity: 0.1,
     });
 
     const hingeMaterial = new THREE.MeshStandardMaterial({
-      color: 0x2a3544,
+      color: 0x5a6574,
       metalness: 0.8,
       roughness: 0.2,
     });
 
     const massMaterial = new THREE.MeshStandardMaterial({
-      color: 0xff4444,
-      metalness: 0.6,
-      roughness: 0.3,
-      emissive: 0x440000,
-      emissiveIntensity: 0.3,
+      color: 0xe53935,
+      metalness: 0.4,
+      roughness: 0.4,
+      emissive: 0x660000,
+      emissiveIntensity: 0.15,
     });
 
     // Door dimensions
@@ -162,9 +162,9 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
     // Ground plane
     const groundGeometry = new THREE.PlaneGeometry(20, 20);
     const groundMaterial = new THREE.MeshStandardMaterial({
-      color: 0x0a0f14,
+      color: 0xe8eef4,
       metalness: 0,
-      roughness: 1,
+      roughness: 0.9,
     });
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2;
@@ -191,8 +191,8 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
       return sprite;
     };
 
-    const labelA = createLabel('Door A (Sliding Mass)', new THREE.Vector3(-doorSpacing / 2, 2.8, 0), 0x00b8d4);
-    const labelB = createLabel('Door B (Standard)', new THREE.Vector3(doorSpacing / 2, 2.8, 0), 0xf5a623);
+    const labelA = createLabel('Door A (Sliding Mass)', new THREE.Vector3(-doorSpacing / 2, 2.8, 0), 0x0077aa);
+    const labelB = createLabel('Door B (Standard)', new THREE.Vector3(doorSpacing / 2, 2.8, 0), 0xd9850e);
     scene.add(labelA);
     scene.add(labelB);
 

@@ -6,56 +6,56 @@
 
 @layer base {
   :root {
-    --background: 220 20% 8%;
-    --foreground: 210 20% 95%;
+    --background: 210 40% 98%;
+    --foreground: 220 25% 15%;
 
-    --card: 220 18% 12%;
-    --card-foreground: 210 20% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 15%;
 
-    --popover: 220 18% 12%;
-    --popover-foreground: 210 20% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 15%;
 
-    --primary: 180 70% 50%;
-    --primary-foreground: 220 20% 8%;
+    --primary: 200 80% 40%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 18%;
-    --secondary-foreground: 210 20% 90%;
+    --secondary: 210 30% 94%;
+    --secondary-foreground: 220 25% 20%;
 
-    --muted: 220 15% 15%;
-    --muted-foreground: 215 15% 55%;
+    --muted: 210 25% 92%;
+    --muted-foreground: 220 15% 45%;
 
-    --accent: 35 90% 55%;
-    --accent-foreground: 220 20% 8%;
+    --accent: 25 95% 50%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 50%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 20%;
-    --input: 220 15% 18%;
-    --ring: 180 70% 50%;
+    --border: 210 25% 88%;
+    --input: 210 25% 90%;
+    --ring: 200 80% 40%;
 
     --radius: 0.5rem;
 
     /* Custom simulation colors */
-    --door-a: 180 70% 50%;
-    --door-b: 35 90% 55%;
-    --graph-line-a: 180 70% 60%;
-    --graph-line-b: 35 90% 60%;
-    --grid-line: 220 15% 25%;
-    --simulation-bg: 220 25% 6%;
+    --door-a: 200 80% 45%;
+    --door-b: 25 95% 50%;
+    --graph-line-a: 200 80% 45%;
+    --graph-line-b: 25 95% 50%;
+    --grid-line: 210 20% 85%;
+    --simulation-bg: 210 30% 96%;
     
     /* Glow effects */
-    --glow-primary: 0 0 30px hsl(180 70% 50% / 0.3);
-    --glow-accent: 0 0 30px hsl(35 90% 55% / 0.3);
+    --glow-primary: 0 4px 20px hsl(200 80% 40% / 0.25);
+    --glow-accent: 0 4px 20px hsl(25 95% 50% / 0.25);
 
-    --sidebar-background: 220 18% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 180 70% 50%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 25% 15%;
+    --sidebar-primary: 200 80% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 220 15% 20%;
-    --sidebar-ring: 180 70% 50%;
+    --sidebar-accent: 210 30% 94%;
+    --sidebar-accent-foreground: 220 25% 15%;
+    --sidebar-border: 210 25% 88%;
+    --sidebar-ring: 200 80% 40%;
   }
 }
 
@@ -77,7 +77,7 @@
 @layer components {
   .simulation-panel {
     @apply bg-card border border-border rounded-lg p-4;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   }
 
   .control-label {
