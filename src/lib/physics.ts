@@ -93,8 +93,11 @@ export const defaultParams: SimulationParams = {
   initialRadius: 0.3, // meters
   finalRadius: 0.8, // meters
   slideDuration: 1.5, // seconds
-  initialAngularVelocity: 2.0, // rad/s
+  initialAngularVelocity: 1.5, // rad/s (reduced for single close)
 };
+
+// Maximum angle for door close (90 degrees = π/2)
+export const MAX_DOOR_ANGLE = Math.PI / 2;
 
 // Initialize simulation state
 export function initializeState(params: SimulationParams): SimulationState {
@@ -134,6 +137,17 @@ export function updateState(
 ): SimulationState {
   if (!state.isRunning) return state;
 
+  // Check if both doors have reached max angle - stop simulation
+  if (state.doorA.angle >= MAX_DOOR_ANGLE && state.doorB.angle >= MAX_DOOR_ANGLE) {
+    return {
+      ...state,
+      isRunning: false,
+      phase: 'phase2',
+      doorA: { ...state.doorA, angularVelocity: 0 },
+      doorB: { ...state.doorB, angularVelocity: 0 },
+    };
+  }
+
   const newTime = state.time + deltaTime;
   const doorMomentOfInertia = calculateDoorMomentOfInertia(params.doorMass, params.doorWidth);
 
@@ -147,15 +161,24 @@ export function updateState(
     params.slidingMass,
     newMassRadius
   );
-  const newAngularVelocityA = calculateAngularVelocity(state.doorA.angularMomentum, newMomentOfInertiaA);
-  const newAngleA = state.doorA.angle + newAngularVelocityA * deltaTime;
+  
+  let newAngularVelocityA = state.doorA.angle >= MAX_DOOR_ANGLE 
+    ? 0 
+    : calculateAngularVelocity(state.doorA.angularMomentum, newMomentOfInertiaA);
+  
+  let newAngleA = state.doorA.angle >= MAX_DOOR_ANGLE
+    ? MAX_DOOR_ANGLE
+    : Math.min(MAX_DOOR_ANGLE, state.doorA.angle + newAngularVelocityA * deltaTime);
 
-  // Door B: Constant rotation (no sliding mass)
-  const newAngleB = state.doorB.angle + state.doorB.angularVelocity * deltaTime;
+  // Door B: Constant rotation (no sliding mass) until max angle
+  let newAngularVelocityB = state.doorB.angle >= MAX_DOOR_ANGLE ? 0 : state.doorB.angularVelocity;
+  let newAngleB = state.doorB.angle >= MAX_DOOR_ANGLE
+    ? MAX_DOOR_ANGLE
+    : Math.min(MAX_DOOR_ANGLE, state.doorB.angle + newAngularVelocityB * deltaTime);
 
   // Determine phase
   let phase: 'idle' | 'phase1' | 'phase2' = 'phase1';
-  if (slideProgress >= 1) {
+  if (newAngleA >= MAX_DOOR_ANGLE && newAngleB >= MAX_DOOR_ANGLE) {
     phase = 'phase2';
   }
 
@@ -167,12 +190,12 @@ export function updateState(
       angle: newAngleA,
       angularVelocity: newAngularVelocityA,
       momentOfInertia: newMomentOfInertiaA,
-      angularMomentum: state.doorA.angularMomentum, // Conserved!
+      angularMomentum: state.doorA.angularMomentum,
       massRadius: newMassRadius,
     },
     doorB: {
       angle: newAngleB,
-      angularVelocity: state.doorB.angularVelocity, // Constant!
+      angularVelocity: newAngularVelocityB,
       momentOfInertia: state.doorB.momentOfInertia,
       angularMomentum: state.doorB.angularMomentum,
     },
