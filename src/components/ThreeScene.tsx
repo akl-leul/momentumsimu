@@ -302,26 +302,20 @@ export const ThreeScene = ({ state, params }: ThreeSceneProps) => {
   useEffect(() => {
     if (!sceneRef.current) return;
 
-    const { doorAGroup, doorBGroup } = sceneRef.current;
+    const { doorAGroup, doorBGroup, slidingMass } = sceneRef.current;
 
     // Update door rotations (rotate around hinge axis)
     doorAGroup.rotation.y = state.doorA.angle;
     doorBGroup.rotation.y = state.doorB.angle;
 
-    // Update sliding mass position - find it in doorAGroup children
-    const slidingMass = doorAGroup.children.find(
-      (child) => child instanceof THREE.Mesh && (child.material as THREE.MeshStandardMaterial).color?.getHex() === 0xe53935
-    ) as THREE.Mesh | undefined;
-    
-    if (slidingMass) {
-      const doorHeight = 2.2;
-      const doorThickness = 0.08;
-      slidingMass.position.set(
-        state.doorA.massRadius,
-        doorHeight / 2 + 0.1,
-        doorThickness / 2 + 0.02
-      );
-    }
+    // Update sliding mass position
+    const doorHeight = 2.2;
+    const doorThickness = 0.08;
+    slidingMass.position.set(
+      state.doorA.massRadius,
+      doorHeight / 2 + 0.1,
+      doorThickness / 2 + 0.02
+    );
   }, [state.doorA.angle, state.doorB.angle, state.doorA.massRadius]);
 
   return (
