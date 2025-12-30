@@ -41,9 +41,9 @@ export const ParameterControls = ({ params, onParamsChange, disabled }: Paramete
     {
       key: 'initialRadius' as const,
       label: 'Initial Radius r₁ (m)',
-      min: 0.1,
-      max: 0.5,
-      step: 0.05,
+      min: 0.05,
+      max: 0.3,
+      step: 0.01,
       value: params.initialRadius,
     },
     {

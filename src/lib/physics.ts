@@ -90,13 +90,13 @@ export function interpolateRadius(
 // This ensures Door A (sliding mass) closes SLOWER than Door B
 // because I_A increases as mass slides outward, causing ω_A to decrease
 export const defaultParams: SimulationParams = {
-  doorMass: 30, // kg
+  doorMass: 25, // kg
   doorWidth: 1.0, // meters
-  slidingMass: 8, // kg (significant mass for visible effect)
-  initialRadius: 0.1, // meters (r_1 - mass starts NEAR hinge)
-  finalRadius: 0.9, // meters (r_2 - mass ends FAR from hinge)
-  slideDuration: 1.2, // seconds
-  initialAngularVelocity: 2.0, // rad/s (same for both doors)
+  slidingMass: 12, // kg (significant mass for visible effect)
+  initialRadius: 0.05, // meters (r_1 - mass starts VERY NEAR hinge)
+  finalRadius: 0.95, // meters (r_2 - mass ends FAR from hinge)
+  slideDuration: 0.3, // seconds (mass slides out quickly at start)
+  initialAngularVelocity: 1.5, // rad/s (same for both doors)
 };
 
 // Maximum angle for door close (90 degrees = π/2)
